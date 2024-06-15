@@ -35,4 +35,19 @@
       owner: root
       group: root
       mode: 0440
-      
+
+  - name: turn off ssh password login
+    tags: always
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PasswordAuthentication'
+      line: PasswordAuthentication no
+    when: ansible_distribution == "Debian"
+    register: ssh
+
+  - name: restart ssh
+    tags: always
+    service:
+      name: ssh
+      state: restarted
+    when: ssh.changed

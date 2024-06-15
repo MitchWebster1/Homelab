@@ -7,7 +7,6 @@
   - name : install updates (Debian)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
     when: ansible_distribution == "Debian"
 
@@ -40,6 +39,22 @@
         - libapache2-mod-php
       state: latest
     when: ansible_distribution == "Debian"
+
+  - name: change email address for admin
+    tags: apache, apache2, debian
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: '^PasswordAuthentication'
+      line: PasswordAuthentication no
+    when: ansible_distribution == "Debian"
+    register: ssh
+
+  - name: restart ssh
+    tags: apache, apache2, debian
+    service:
+      name: ssh
+      state: restarted
+    when: ssh.changed
 
   - name: copy default html file for site
     tags: apache, apache2

@@ -12,3 +12,8 @@
     group: root
     mode: 0644
   notify: restart_sshd
+
+- name: install ansible
+  tags: ansible
+  apt:
+    name: ansible

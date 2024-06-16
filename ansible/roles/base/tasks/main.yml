@@ -16,4 +16,6 @@
 - name: install ansible
   tags: ansible
   apt:
-    name: ansible
+    name: 
+      - ansible
+      - git

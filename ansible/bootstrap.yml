@@ -35,3 +35,14 @@
       owner: root
       group: root
       mode: 0440
+  
+  - name: install qemu-guest-agent
+    tags: always
+    apt:
+      name:
+        - qemu-guest-agent
+
+  - name: start qemu-guest-agent
+    service:
+      name: qemu-guest-agent
+      state: started

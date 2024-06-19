@@ -9,7 +9,7 @@
     apt:
       update_cache: yes
     changed_when: false
-    when: ansible_distribution == "Debian"
+    # when: ansible_distribution == "Debian"
 
 - hosts: all
   become: true

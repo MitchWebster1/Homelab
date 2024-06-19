@@ -1,21 +1,49 @@
+- name: create ansible user
+  tags: always
+  user:
+    name: ansible
+    groups: root
+
 - name: add ssh key for ansible
+  tags: always
+  # state: present
   authorized_key:
     user: ansible
-    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK4N7h9ecvdQMMmDQV7doEA9ZDvm2t4NO1XrF93fa5HO ansible"
+    key: '{{ item }}'
+  with_file:
+    - public_keys/ansible
+    - public_keys/office
 
-- name: generate sshd_config file from template
-  tags: ssh
-  template:
-    src: "{{ ssh_template_file }}"
-    dest: /etc/ssh/sshd_config
+- name : add sudoers file for ansible
+  tags: always
+  copy:
+    src: sudoer_ansible
+    dest: /etc/sudoers.d/ansible
     owner: root
     group: root
-    mode: 0644
-  notify: restart_sshd
+    mode: 0440
 
-- name: install ansible
-  tags: ansible
+# - name: generate sshd_config file from template
+#   tags: ssh
+#   template:
+#     src: "{{ ssh_template_file }}"
+#     dest: /etc/ssh/sshd_config
+#     owner: root
+#     group: root
+#     mode: 0644
+#   notify: restart_sshd
+
+- name: Install software-properties-common
   apt:
-    name: 
-      - ansible
-      - git
+    name: software-properties-common
+    state: present
+
+# - name: Add Ansible Repository
+#   apt_repository:
+#     repo: "ppa:ansible/ansible"
+#     state: present
+
+# - name: Install Ansible
+#   package:
+#     name: ansible
+#     state: present
